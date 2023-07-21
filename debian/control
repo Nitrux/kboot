@@ -11,8 +11,6 @@ Package: kboot
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, kexec-tools
 Description:  Make it easier to boot other Linux kernels.
- kboot is designed for a particular purpose,
-  make it easier to allow for a faster transition
-  from the currently running kernel to a new kernel
+ kboot is designed for a particular purpose, make it easier to allow for a faster transition from the currently running kernel to a new kernel.
  kboot targets Nitrux 2.9.0+.
 
