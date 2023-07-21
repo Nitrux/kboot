@@ -3,7 +3,7 @@
 
 # Define the path of vmlinuz and initrd to use with kexec.
 # We suggest using the directory /kboot to organize kernels.
-# Soft links are valid file types to use.
+# Regular files and soft links are valid file types to use.
 #
 KEXEC_VMLINUZ=/kboot/debian/vmlinuz
 KEXEC_INITRD=/kboot/debian/initrd.img

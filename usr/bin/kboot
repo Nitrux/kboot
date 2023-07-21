@@ -38,38 +38,38 @@ VENDOR='Nitrux Latinoamericana S.C.'
 FECHA=$(date +%Y)
 
 
-# -- Print informative messages to stdin.
+# -- Print informative messages to stderr.
 
 puts_info() {
 	if [ -n "$1" ]; then
-		printf "%s: \e[34mInfo:\e[0m %s\n" "$TOOL_NAME" "$*"
+		printf "%s: \e[34mInfo:\e[0m %s\n" "$TOOL_NAME" "$*" >&2
 	fi
 }
 
 
-# -- Print success messages to stdin.
+# -- Print success messages to stderr.
 
 puts_success() {
 	if [ -n "$1" ]; then
-		printf "%s: \e[32mSuccess:\e[0m %s\n" "$TOOL_NAME" "$*"
+		printf "%s: \e[32mSuccess:\e[0m %s\n" "$TOOL_NAME" "$*" >&2
 	fi
 }
 
 
-# -- Print error messages to stdin.
+# -- Print error messages to stderr.
 
 puts_error() {
 	if [ -n "$1" ]; then
-		printf "%s: \e[31mError:\e[0m %b\n" "$TOOL_NAME" "$*"
+		printf "%s: \e[31mError:\e[0m %b\n" "$TOOL_NAME" "$*" >&2
 	fi
 }
 
 
-# -- Print messages or text using multiple lines.
+# -- Print messages or text using multiple lines to stderr.
 
 print_message() {
 	if [ -n "$1" ]; then
-		printf "%s\n" "$@" >&2;
+		printf "%s\n" "$@" >&2
 	fi
 }
 
@@ -77,20 +77,20 @@ print_message() {
 # -- Check if this is running as root.
 # -- Exit if not running as root.
 
-if [ "$EUID" -ne 0 ]; then
-    puts_error "$TOOL_NAME is not running as root, quitting."
-    exit 1
+if [ "$(id -u)" -ne 0 ]; then
+	puts_error "$TOOL_NAME is not running as root, quitting."
+	exit 1
 else
-    puts_success "$TOOL_NAME is running as root, continuing..."
-    ROOT=("sudo")
+	puts_success "$TOOL_NAME is running as root, continuing..."
+	ROOT="sudo"
 fi
 
 
-# -- Check if any arguments are passed
+# -- Check if any arguments are passed.
 
 if [ $# -eq 0 ]; then
-    puts_error "No arguments provided to $TOOL_NAME, quitting."
-    exit 1
+	puts_error "No arguments provided to $TOOL_NAME, quitting."
+	exit 1
 fi
 
 
@@ -107,39 +107,39 @@ error () {
 CONFIG_DIR="/etc/kboot.d"
 
 
-# -- Check existance of kboot kernel files directory.
+# -- Check existence of kboot kernel files directory.
 
 if [ -d "$CONFIG_DIR" ]; then
-  puts_success "Kernel Boot directory found, continuing..."
+	puts_success "Kernel Boot directory found, continuing..."
 else
-  puts_error "Kernel Boot directory not found!, quitting."
-  exit 1
+	puts_error "Kernel Boot directory not found!, quitting."
+	exit 1
 fi
 
 
 # -- Functions.
 
 root_kexec() {
-    local ROOT=("sudo" "kexec" "$@")
+	local ROOT=("sudo" "kexec" "$@")
 
-    if ! command -v "${ROOT[0]}" >/dev/null 2>&1; then
-        printf "Error: '%s' command not found. Please make sure it's installed and try again.\n" "${ROOT[0]}"
-        return 1
-    fi
+	if ! command -v "${ROOT[0]}" >/dev/null 2>&1; then
+		puts_error "Error: '${ROOT[0]}' command not found. Please make sure it's installed and try again."
+		return 1
+	fi
 
-    "${ROOT[@]}"
+	"${ROOT[@]}"
 }
 
 
 # -- Use a log file.
-# -- Everything below will go to the file nuts.log.
+# -- Everything below will go to the file kboot.log.
 
-KBOOT_LOG=/var/log/kboot.log
+KBOOT_LOG="/var/log/kboot.log"
 
 if [ -f "$KBOOT_LOG" ]; then
 	puts_info "$TOOL_NAME log file found, skipping..."
 else
-	puts_info "Unable to locate $TOOL_NAME log file. Creating new log file, continuing..."
+	puts_info "Unable to locate $TOOL_NAME log file. Creating a new log file, continuing..."
 fi
 
 #   ====== START ======
@@ -148,35 +148,35 @@ fi
 
 for cmd; do
 	case "$cmd" in
-		(-h | --help)
+		-h | --help)
 			print_message "$TOOL_NAME" \
 				"" \
 				"Description:" \
 				"" \
-				"    $TOOL_NAME or kboot is a utility designed for the Nitrux Operating System to provide a solution to make it easier to boot other Linux kernels." \
-				"    ⚠️ Important: kboot is intended to work exclusively in Nitrux OS, and using this utility in other distributions is not supported at all." \
+				"	$TOOL_NAME or $TOOL_SHRT_NAME is a utility designed for the Nitrux Operating System to provide a solution to make it easier to boot other Linux kernels." \
+				"	⚠️ Important: $TOOL_SHRT_NAME is intended to work exclusively in Nitrux OS, and using this utility in other distributions is not supported at all." \
 				"" \
-				"    Report bugs at: https://github.com/Nitrux/kboot/issues." \
+				"	Report bugs at: https://github.com/Nitrux/kboot/issues." \
 				"" \
 				"Flags:" \
-				"    -h or --help         Show this help." \
-				"    -v or --version      Show the version." \
-				"    -d or --debug        Enable verbose output." \
+				"	-h or --help		Show this help." \
+				"	-v or --version		Show the version." \
+				"	-d or --debug		Enable verbose output." \
 				"" \
 				"Operations:" \
-				"    switch       Switches the kernel using the settings in the specified configuration file, e.g debian or liquorix." \
+				"	switch	   Switches the kernel using the settings in the specified configuration file, e.g debian or liquorix." \
 				"" \
 				"Usage:" \
-				"    sudo kboot <flag> (operation)" \
+				"	sudo kboot <flag> (operation)" \
 				"" \
 				"Examples:" \
-				"    sudo kboot switch debian" \
-				"    sudo kboot -d switch liquorix"
-				
+				"	sudo kboot switch debian" \
+				"	sudo kboot -d switch liquorix"
+
 			exit
 			;;
 
-		(-v | --version)
+		-v | --version)
 			print_message "$TOOL_NAME" \
 				"" \
 				"Version: $TOOL_VERSION." \
@@ -185,14 +185,14 @@ for cmd; do
 				"" \
 				"Authors:" \
 				"" \
-				"    Copyright <2023> <Uri Herrera <uri_herrera@nxos.org>>" \
+				"	Copyright <2023> <Uri Herrera <uri_herrera@nxos.org>>" \
 				"" \
 				"(c) $FECHA Some Rights Reserved. Made by $VENDOR"
 
 			exit
 			;;
 
-		(-d | --debug)
+		-d | --debug)
 			set -x
 			shift
 			;;
@@ -201,36 +201,42 @@ done
 
 ( for cmd; do
 	case "${1,,}" in
-    switch)
-        if [ -z "$2" ]; then
-            puts_error "Missing file argument!, quitting."
-            exit 1
-        fi
+	'' )  error "No operation specified (use -h to see a list of operations).";;
 
-        # -- File path within /etc/kboot.d directory.
+	switch)
 
-        FILE_NAME="$2"
-        FILE_PATH="/etc/kboot.d/$FILE_NAME"
+		if [ -z "$2" ]; then
+			puts_error "Missing file argument!, quitting."
+			exit 1
+		fi
 
-        if [ ! -f "$FILE_PATH" ]; then
-            puts_error "File not found in /etc/kboot.d directory!, quitting."
-            exit 1
-        fi
 
-        # -- Read values from the specified file.
+		# -- File path within /etc/kboot.d directory.
+
+		FILE_NAME="$2"
+		FILE_PATH="/etc/kboot.d/$FILE_NAME"
+
+		if [ ! -f "$FILE_PATH" ]; then
+			puts_error "File not found in /etc/kboot.d directory!, quitting."
+			exit 1
+		fi
+
+
+		# -- Read values from the specified file.
 		# shellcheck source=/dev/null
 
-        source "$FILE_PATH"
+		 "$FILE_PATH"
 
-        # -- Call the root_kexec function with the values from the file.
 
-        root_kexec -l --initrd="$KEXEC_INITRD" --append="$KERNEL_PARAMETERS" "$KEXEC_VMLINUZ"
-        root_kexec -e
-        ;;
-    *)
-        puts_error "Invalid flag!. Use 'kboot switch <file_name>' to load a new kernel image, quitting."
-        exit 1
-        ;;
+		# -- Call the root_kexec function with the values from the file.
+
+		root_kexec -l "$KEXEC_VMLINUZ" --initrd="$KEXEC_INITRD" --append="$KERNEL_PARAMETERS" 
+		root_kexec -e
+		;;
+	*)
+		puts_error "Invalid flag!. Use 'kboot switch <file_name>' to load a new kernel image, quitting."
+		exit 1
+		;;
 	esac
 done ) 2>&1 | tee -a "$KBOOT_LOG"
 
