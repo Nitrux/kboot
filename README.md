@@ -51,7 +51,7 @@ For releases of Nitrux where `kboot` is not available by default, do the followi
 ```
 git clone --depth=1 https://github.com/Nitrux/kboot.git $HOME/kboot
 sudo cp $HOME/kboot/usr/bin/kboot /usr/bin
-sudo cp $HOME/kboot/etc/kboot.conf /etc
+sudo cp -r $HOME/kboot/etc/kboot.d /etc
 ```
 
 # Usage
