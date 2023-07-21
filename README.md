@@ -7,13 +7,13 @@
 
 # Introduction
 
-The Kernel Boot (`kboot`) utility uses [kexec](https://en.wikipedia.org/wiki/Kexec) and is designed for [Nitrux OS](https://nxos.org/) to provide a solution to make it easier to load other Linux kernels on the fly.
+The Kernel Boot (`kboot`) utility uses [kexec](https://en.wikipedia.org/wiki/Kexec) and is designed for [Nitrux OS](https://nxos.org/) to provide a solution to make it friendlier to load other Linux kernels on the fly.
 
 > _⚠️ Important: `kboot` is intended to work exclusively in Nitrux OS, and using this utility in other distributions is not supported at all. Please do not open issues regarding this use case; they will be closed._
 
 # Overview
 
-`kboot` is designed for a particular purpose, make it easier to allow for a faster transition from the currently running kernel to a new kernel, avoiding the time-consuming hardware initialization and bootloader stages. It performs the following steps:
+`kboot` is designed for a particular purpose, make it friendlier to allow for a faster transition from the currently running kernel to a new kernel, avoiding the time-consuming hardware initialization and bootloader stages. It performs the following steps:
 
 1. Reads the settings in the specified configuration file.
 2. Then, uses `kexec` to load the selected kernel using the parameters from the configuration file.
