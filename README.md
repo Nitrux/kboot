@@ -66,7 +66,7 @@ sudo cp -r $HOME/kboot/etc/kboot.d /etc
 ### Commands:
 
 **Switch**: `sudo kboot switch debian` or `sudo kboot switch liquorix`
-- Switches the kernel using the settings in the specified configuration file, e.g `debian` or `liquorix`.
+- Switches the kernel using the settings in the specified configuration file, e.g `/etc/kboot.d/debian` or `/etc/kboot.d/liquorix`.
 > _⚠️ Important: This process involves stopping the currently running kernel and starting the new kernel from scratch. All running processes, including the graphical session, are terminated during this transition._
 
 ### Configuration:
