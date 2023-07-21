@@ -1,0 +1,237 @@
+#!/bin/bash
+
+#############################################################################################################################################################################
+#   The license used for this file and its contents is: BSD-3-Clause                                                                                                        #
+#                                                                                                                                                                           #
+#   Copyright <2023> <Uri Herrera <uri_herrera@nxos.org>>                                                                                                                   #
+#                                                                                                                                                                           #
+#   Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:                          #
+#                                                                                                                                                                           #
+#    1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.                                        #
+#                                                                                                                                                                           #
+#    2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer                                      #
+#       in the documentation and/or other materials provided with the distribution.                                                                                         #
+#                                                                                                                                                                           #
+#    3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software                    #
+#       without specific prior written permission.                                                                                                                          #
+#                                                                                                                                                                           #
+#    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,                      #
+#    THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS                  #
+#    BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE                 #
+#    GOODS OR SERVICES; LOSS OF USE, DATA,   OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,                      #
+#    STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.   #
+#############################################################################################################################################################################
+
+
+# -- Exit on errors.
+# -- Exit if undefined variables.
+
+set -eu
+
+
+# -- Set program name and version.
+
+TOOL_NAME="Kernel Boot"
+TOOL_SHRT_NAME="kboot"
+TOOL_VERSION="$(md5sum /usr/bin/kboot | cut -c -32)"
+VENDOR='Nitrux Latinoamericana S.C.'
+FECHA=$(date +%Y)
+
+
+# -- Print informative messages to stdin.
+
+puts_info() {
+	if [ -n "$1" ]; then
+		printf "%s: \e[34mInfo:\e[0m %s\n" "$TOOL_NAME" "$*"
+	fi
+}
+
+
+# -- Print success messages to stdin.
+
+puts_success() {
+	if [ -n "$1" ]; then
+		printf "%s: \e[32mSuccess:\e[0m %s\n" "$TOOL_NAME" "$*"
+	fi
+}
+
+
+# -- Print error messages to stdin.
+
+puts_error() {
+	if [ -n "$1" ]; then
+		printf "%s: \e[31mError:\e[0m %b\n" "$TOOL_NAME" "$*"
+	fi
+}
+
+
+# -- Print messages or text using multiple lines.
+
+print_message() {
+	if [ -n "$1" ]; then
+		printf "%s\n" "$@" >&2;
+	fi
+}
+
+
+# -- Check if this is running as root.
+# -- Exit if not running as root.
+
+if [ "$EUID" -ne 0 ]; then
+    puts_error "$TOOL_NAME is not running as root, quitting."
+    exit 1
+else
+    puts_success "$TOOL_NAME is running as root, continuing..."
+    ROOT=("sudo")
+fi
+
+
+# -- Check if any arguments are passed
+
+if [ $# -eq 0 ]; then
+    puts_error "No arguments provided to $TOOL_NAME, quitting."
+    exit 1
+fi
+
+
+# -- Display an error when no flag is used.
+
+error () {
+  puts_error "$TOOL_SHRT_NAME: \e[31mError:\e[0m: $*" >&2
+  exit 1
+}
+
+
+# -- Define the path of the kboot kernel files.
+
+CONFIG_DIR="/etc/kboot.d"
+
+
+# -- Check existance of kboot kernel files directory.
+
+if [ -d "$CONFIG_DIR" ]; then
+  puts_success "Kernel Boot directory found, continuing..."
+else
+  puts_error "Kernel Boot directory not found!, quitting."
+  exit 1
+fi
+
+
+# -- Functions.
+
+root_kexec() {
+    local ROOT=("sudo" "kexec" "$@")
+
+    if ! command -v "${ROOT[0]}" >/dev/null 2>&1; then
+        printf "Error: '%s' command not found. Please make sure it's installed and try again.\n" "${ROOT[0]}"
+        return 1
+    fi
+
+    "${ROOT[@]}"
+}
+
+
+# -- Use a log file.
+# -- Everything below will go to the file nuts.log.
+
+KBOOT_LOG=/var/log/kboot.log
+
+if [ -f "$KBOOT_LOG" ]; then
+	puts_info "$TOOL_NAME log file found, skipping..."
+else
+	puts_info "Unable to locate $TOOL_NAME log file. Creating new log file, continuing..."
+fi
+
+#   ====== START ======
+
+# -- Flag parsing.
+
+for cmd; do
+	case "$cmd" in
+		(-h | --help)
+			print_message "$TOOL_NAME" \
+				"" \
+				"Description:" \
+				"" \
+				"    $TOOL_NAME or kboot is a utility designed for the Nitrux Operating System to provide a solution to make it easier to boot other Linux kernels." \
+				"    ⚠️ Important: kboot is intended to work exclusively in Nitrux OS, and using this utility in other distributions is not supported at all." \
+				"" \
+				"    Report bugs at: https://github.com/Nitrux/kboot/issues." \
+				"" \
+				"Flags:" \
+				"    -h or --help         Show this help." \
+				"    -v or --version      Show the version." \
+				"    -d or --debug        Enable verbose output." \
+				"" \
+				"Operations:" \
+				"    switch       Switches the kernel using the settings in the specified configuration file, e.g debian or liquorix." \
+				"" \
+				"Usage:" \
+				"    sudo kboot <flag> (operation)" \
+				"" \
+				"Examples:" \
+				"    sudo kboot switch debian" \
+				"    sudo kboot -d switch liquorix"
+				
+			exit
+			;;
+
+		(-v | --version)
+			print_message "$TOOL_NAME" \
+				"" \
+				"Version: $TOOL_VERSION." \
+				"" \
+				"The license used for this file and its contents is: BSD-3-Clause." \
+				"" \
+				"Authors:" \
+				"" \
+				"    Copyright <2023> <Uri Herrera <uri_herrera@nxos.org>>" \
+				"" \
+				"(c) $FECHA Some Rights Reserved. Made by $VENDOR"
+
+			exit
+			;;
+
+		(-d | --debug)
+			set -x
+			shift
+			;;
+	esac
+done
+
+( for cmd; do
+	case "${1,,}" in
+    switch)
+        if [ -z "$2" ]; then
+            puts_error "Missing file argument!, quitting."
+            exit 1
+        fi
+
+        # -- File path within /etc/kboot.d directory.
+
+        FILE_NAME="$2"
+        FILE_PATH="/etc/kboot.d/$FILE_NAME"
+
+        if [ ! -f "$FILE_PATH" ]; then
+            puts_error "File not found in /etc/kboot.d directory!, quitting."
+            exit 1
+        fi
+
+        # -- Read values from the specified file.
+		# shellcheck source=/dev/null
+
+        source "$FILE_PATH"
+
+        # -- Call the root_kexec function with the values from the file.
+
+        root_kexec -l --initrd="$KEXEC_INITRD" --append="$KERNEL_PARAMETERS" "$KEXEC_VMLINUZ"
+        root_kexec -e
+        ;;
+    *)
+        puts_error "Invalid flag!. Use 'kboot switch <file_name>' to load a new kernel image, quitting."
+        exit 1
+        ;;
+	esac
+done ) 2>&1 | tee -a "$KBOOT_LOG"
+
+#   ====== END ======

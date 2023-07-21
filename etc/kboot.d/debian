@@ -1,0 +1,37 @@
+# Default values for booting a kernel with kboot
+# 2023 (c) Nitrux Latinoamericana S.C.
+
+# Define the path of vmlinuz and initrd to use with kexec.
+# We suggest using the directory /kboot to organize kernels.
+# Soft links are valid file types to use.
+#
+KEXEC_VMLINUZ=/kboot/debian/vmlinuz
+KEXEC_INITRD=/kboot/debian/initrd.img
+
+# Define the parameters used when loading the kernel.
+# Kernel parameters go as a single line.
+# Default parameters used in Nitrux are the following.
+#
+# apparmor=1 
+# security=apparmor 
+# audit=0 
+# intel_pstate=disable 
+# hpet=disable 
+# rcupdate.rcu_expedited=1 
+# libahci.ignore_sss=1 
+# elevator=noop 
+# radeon.cik_support=0 
+# amdgpu.cik_support=1 
+# radeon.si_support=0 
+# amdgpu.si_support=1 
+# nvidia_drm.modeset=1 
+# overlayroot=tmpfs:swap=1,recurse=0 
+# zswap.enabled=1 
+# zswap.compressor=lz4 
+# zswap.max_pool_percent=20 
+# zswap.zpool=z3fold 
+# nvme_core.multipath=Y 
+# quiet
+#
+#
+KERNEL_PARAMETERS=apparmor=1 security=apparmor audit=0 intel_pstate=disable hpet=disable rcupdate.rcu_expedited=1 libahci.ignore_sss=1 elevator=noop radeon.cik_support=0 amdgpu.cik_support=1 radeon.si_support=0 amdgpu.si_support=1 nvidia_drm.modeset=1 overlayroot=tmpfs:swap=1,recurse=0 zswap.enabled=1 zswap.compressor=lz4 zswap.max_pool_percent=20 zswap.zpool=z3fold nvme_core.multipath=Y quiet

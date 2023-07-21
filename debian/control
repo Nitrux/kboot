@@ -1,0 +1,18 @@
+Source: kboot
+Section: misc
+Priority: optional
+Maintainer: Uri Herrera <uri_herrera@nxos.org>
+Build-Depends: debhelper (>=9)
+Standards-Version: 3.9.6
+Homepage: https://nxos.org
+
+
+Package: nuts
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, kexec-tools
+Description:  Make it easier to boot other Linux kernels.
+ kboot is designed for a particular purpose,
+  make it easier to allow for a faster transition
+  from the currently running kernel to a new kernel
+ kboot targets Nitrux 2.9.0+.
+
