@@ -7,7 +7,7 @@ Standards-Version: 3.9.6
 Homepage: https://nxos.org
 
 
-Package: nuts
+Package: kboot
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, kexec-tools
 Description:  Make it easier to boot other Linux kernels.
