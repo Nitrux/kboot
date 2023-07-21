@@ -35,7 +35,7 @@ The Kernel Boot (`kboot`) utility uses [kexec](https://en.wikipedia.org/wiki/Kex
 - An init or service manager.
   - `kboot` does not function as an init or replace an init. The init process is responsible for initializing the system, starting essential system services and daemons, and bringing up the user space environment. `kboot` does not perform these functions, `kboot` only loads a new kernel image.
 - An initrd or initram generator.
-  - `kboot` does not replace or modify the existing initramfs generator. The initram generators tools like dracut or initramfs-tools are responsible for identifying and including the necessary modules, drivers, and scripts to correctly set up the root filesystem and handle any unique configurations (e.g., encrypted root, LVM, RAID, etc.). `kboot` loads the new kernel image and transfers control to it.
+  - `kboot` does not replace or modify the existing initramfs generator. The initram generators tools like dracut or initramfs-tools are responsible for identifying and including the necessary modules, drivers, and scripts to correctly set up the root filesystem and handle any unique configurations (e.g., encrypted root, LVM, RAID, etc.). `kboot` loads a kernel and an existing initram image and transfers control to it.
 - A container, virtual machine, Live USB creator, Linux distribution, Live/Recovery/Rescue/Emergency environment, system installer, desktop environment, firmware, or "proprietary software."
   - _**Note**: We don't know why anyone would think that, but one can never know, so let's clarify that._
 
