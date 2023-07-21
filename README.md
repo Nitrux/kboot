@@ -31,7 +31,7 @@ The Kernel Boot (`kboot`) utility uses [kexec](https://en.wikipedia.org/wiki/Kex
 ### What `kboot` is not
 
 - A bootloader.
-  - `kboot` uses a mechanism for loading and executing a new kernel within an already running system, bypassing the complete boot process. In comparison, a bootloader such as GRUB is a full-featured bootloader responsible for the initial bootstrapping of the operating system. GRUB provides a menu to select the desired operating system or kernel loads the selected kernel into memory, and transfers control to it.
+  - `kboot` uses a mechanism for loading and executing a new kernel within an already running system, bypassing the complete boot process. In comparison, a bootloader such as GRUB is a full-featured bootloader responsible for the initial bootstrapping of the operating system. GRUB provides a menu to select the desired operating system or kernel.
 - An init or service manager.
   - `kboot` does not function as an init or replace an init. The init process is responsible for initializing the system, starting essential system services and daemons, and bringing up the user space environment. `kboot` does not perform these functions, `kboot` only loads a new kernel image.
 - An initrd or initram generator.
