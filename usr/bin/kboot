@@ -225,7 +225,7 @@ done
 		# -- Read values from the specified file.
 		# shellcheck source=/dev/null
 
-		 "$FILE_PATH"
+		. "$FILE_PATH"
 
 
 		# -- Call the root_kexec function with the values from the file.
