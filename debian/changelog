@@ -1,3 +1,9 @@
+kboot (0.0.3) nitrux; urgency=medium
+
+  * Update included examples in /etc/kboot.d.
+
+ -- Uri Herrera <uri_herrera@nxos.org>  Sun, 30 Jul 2023 02:14:00 -0500
+
 kboot (0.0.2) nitrux; urgency=medium
 
   * Update included examples in /etc/kboot.d.
