@@ -5,8 +5,8 @@
 # We suggest using the directory /kboot to organize kernels.
 # Regular files and soft links are valid file types to use.
 #
-KEXEC_VMLINUZ=/kboot/debian/vmlinuz
-KEXEC_INITRD=/kboot/debian/initrd.img
+KEXEC_VMLINUZ=/kboot/liquorix/vmlinuz
+KEXEC_INITRD=/kboot/liquorix/initrd.img
 
 # Define the parameters used when loading the kernel.
 # Kernel parameters go as a single line.
@@ -15,7 +15,7 @@ KEXEC_INITRD=/kboot/debian/initrd.img
 # apparmor=1
 # security=apparmor
 # audit=0
-# intel_pstate=disabl
+# intel_pstate=disable
 # hpet=disable
 # rcupdate.rcu_expedited=1
 # libahci.ignore_sss=1
@@ -35,4 +35,4 @@ KEXEC_INITRD=/kboot/debian/initrd.img
 #
 # NOTE: Do not use undeclared variables in the parameters. Doing so will prevent the kernel from loading. This is not a bug.
 #
-KERNEL_PARAMETERS="quiet amdgpu.cik_support=1 amdgpu.si_support=1 apparmor=1 audit=0 elevator=noop hpet=disable intel_pstate=disable libahci.ignore_sss=1 nvidia_drm.modeset=1 nvme_core.multipath=Y radeon.cik_support=0 radeon.si_support=0 rcupdate.rcu_expedited=1 security=apparmor"
+KERNEL_PARAMETERS="boot=casper username=nitrux hostname=nitrux splash quiet amdgpu.cik_support=1 amdgpu.si_support=1 apparmor=1 audit=0 elevator=noop hpet=disable intel_pstate=disable libahci.ignore_sss=1 nvidia_drm.modeset=1 nvme_core.multipath=Y radeon.cik_support=0 radeon.si_support=0 rcupdate.rcu_expedited=1 security=apparmor zswap.compressor=lz4 zswap.enabled=1 zswap.max_pool_percent=20 zswap.zpool=z3fold"

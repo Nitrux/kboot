@@ -35,4 +35,4 @@ KEXEC_INITRD=/kboot/debian/initrd.img
 #
 # NOTE: Do not use undeclared variables in the parameters. Doing so will prevent the kernel from loading. This is not a bug.
 #
-KERNEL_PARAMETERS="quiet amdgpu.cik_support=1 amdgpu.si_support=1 apparmor=1 audit=0 elevator=noop hpet=disable intel_pstate=disable libahci.ignore_sss=1 nvidia_drm.modeset=1 nvme_core.multipath=Y radeon.cik_support=0 radeon.si_support=0 rcupdate.rcu_expedited=1 security=apparmor"
+KERNEL_PARAMETERS="boot=casper username=nitrux hostname=live quiet splash amdgpu.cik_support=1 amdgpu.si_support=1 apparmor=1 audit=0 elevator=noop hpet=disable intel_pstate=disable libahci.ignore_sss=1 nvidia_drm.modeset=1 nvme_core.multipath=Y radeon.cik_support=0 radeon.si_support=0 rcupdate.rcu_expedited=1 security=apparmor"
