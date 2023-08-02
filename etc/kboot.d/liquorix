@@ -10,7 +10,8 @@ KEXEC_INITRD=/kboot/liquorix/initrd.img
 
 # Define the parameters used when loading the kernel.
 # Kernel parameters go as a single line.
-# Default parameters used in Nitrux are the following.
+#
+# Below is a list parameters used in Nitrux:
 #
 # apparmor=1
 # security=apparmor
@@ -35,4 +36,7 @@ KEXEC_INITRD=/kboot/liquorix/initrd.img
 #
 # NOTE: Do not use undeclared variables in the parameters. Doing so will prevent the kernel from loading. This is not a bug.
 #
-KERNEL_PARAMETERS="quiet amdgpu.cik_support=1 amdgpu.si_support=1 apparmor=1 audit=0 elevator=noop hpet=disable intel_pstate=disable libahci.ignore_sss=1 nvidia_drm.modeset=1 nvme_core.multipath=Y radeon.cik_support=0 radeon.si_support=0 rcupdate.rcu_expedited=1 security=apparmor zswap.compressor=lz4 zswap.enabled=1 zswap.max_pool_percent=20 zswap.zpool=z3fold"
+# NOTE: Do not forget to include the root parameter. Otherwise, after running kboot, you will be staring at the initramfs. Use the command: cat /proc/cmdline to view the UUID.
+# For example: root=UUID=xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+#
+KERNEL_PARAMETERS="quiet amdgpu.cik_support=1 amdgpu.si_support=1 apparmor=1 elevator=noop libahci.ignore_sss=1 nvidia_drm.modeset=1 nvme_core.multipath=Y overlayroot=tmpfs:swap=1,recurse=0 radeon.cik_support=0 radeon.si_support=0 security=apparmor zswap.compressor=lz4 zswap.enabled=1 zswap.max_pool_percent=20 zswap.zpool=z3fold"

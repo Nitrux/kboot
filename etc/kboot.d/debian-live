@@ -10,12 +10,13 @@ KEXEC_INITRD=/kboot/debian/initrd.img
 
 # Define the parameters used when loading the kernel.
 # Kernel parameters go as a single line.
-# Default parameters used in Nitrux are the following.
+#
+# Below is a list parameters used in Nitrux:
 #
 # apparmor=1
 # security=apparmor
 # audit=0
-# intel_pstate=disabl
+# intel_pstate=disable
 # hpet=disable
 # rcupdate.rcu_expedited=1
 # libahci.ignore_sss=1
