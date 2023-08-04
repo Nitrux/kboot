@@ -79,7 +79,7 @@ sudo cp -r $HOME/kboot/etc/kboot.d /etc
 ### Options:
 
 - `sudo kboot -h`: Displays the help of `kboot`.
-- `sudo kboot -d': Runs `kboot` in verbose mode.
+- `sudo kboot -d`: Runs `kboot` in verbose mode.
 - `sudo kboot -v`: Displays the version of `kboot`.
 
 # Licensing
