@@ -68,6 +68,7 @@ sudo cp -r $HOME/kboot/etc/kboot.d /etc
 **Switch**: `sudo kboot switch debian` or `sudo kboot switch liquorix`
 - Switches the kernel using the settings in the specified configuration file, e.g., `/etc/kboot.d/debian` or `/etc/kboot.d/liquorix`.
 > _⚠️ Important: This process involves stopping the currently running kernel and starting the new kernel from scratch. All running processes, including the graphical session, are terminated during this transition._
+
 > _⚠️ Important: For users of Nvidia GPUs, using Kernel Boot is not a viable option due to how the Nvidia proprietary driver works with the Linux kernel._
 
 ### Configuration:
