@@ -9,11 +9,11 @@
 
 The Kernel Boot (`kboot`) utility uses [kexec](https://en.wikipedia.org/wiki/Kexec) and is designed for [Nitrux OS](https://nxos.org/) to provide a solution to make it friendlier to load other Linux kernels on the fly.
 
-> _⚠️ Important: `kboot` is intended to work exclusively in Nitrux OS, and using this utility in other distributions is not supported at all. Please do not open issues regarding this use case; they will be closed._
+> _⚠️ Important: `kboot` is intended to work exclusively in Nitrux OS, and using this utility in other distributions is not supported. Please do not open issues regarding this use case; they will be closed._
 
 # Overview
 
-`kboot` is designed for a particular purpose, make it friendlier to allow for a faster transition from the currently running kernel to a new kernel, avoiding the time-consuming hardware initialization and bootloader stages. It performs the following steps:
+`kboot` is designed for a particular purpose, making it friendlier to allow a faster transition from the currently running kernel to a new kernel, avoiding the time-consuming hardware initialization and bootloader stages. It performs the following steps:
 
 1. Reads the settings in the specified configuration file.
 2. Then, uses `kexec` to load the selected kernel using the parameters from the configuration file.
@@ -41,7 +41,7 @@ The Kernel Boot (`kboot`) utility uses [kexec](https://en.wikipedia.org/wiki/Kex
 
 ----
 
-### Requeriments
+### Requirements
 
 - Nitrux 2.9.0+.
 
@@ -66,18 +66,19 @@ sudo cp -r $HOME/kboot/etc/kboot.d /etc
 ### Commands:
 
 **Switch**: `sudo kboot switch debian` or `sudo kboot switch liquorix`
-- Switches the kernel using the settings in the specified configuration file, e.g `/etc/kboot.d/debian` or `/etc/kboot.d/liquorix`.
+- Switches the kernel using the settings in the specified configuration file, e.g., `/etc/kboot.d/debian` or `/etc/kboot.d/liquorix`.
 > _⚠️ Important: This process involves stopping the currently running kernel and starting the new kernel from scratch. All running processes, including the graphical session, are terminated during this transition._
+> _⚠️ Important: For users of Nvidia GPUs, using Kernel Boot is not a viable option due to how the Nvidia proprietary driver works with the Linux kernel._
 
 ### Configuration:
 
-`kboot` uses the files in the  directory `/etc/kboot.d` to load kernels.
+`kboot` uses the directory `/etc/kboot.d` files to load kernels.
 >_⚠️ Important: The files in this directory must refer to a valid kernel (vmlinuz) and initram images (initrd.img) within the filesystem. Starting with Nitrux 2.9.1, the distribution puts kernel images other than the default kernel, like the signed Debian kernel, and initrd in the directory `/kboot` for better organization. In addition, to prevent polluting the GRUB menu._
 
 ### Options:
 
 - `sudo kboot -h`: Displays the help of `kboot`.
-- `sudo kboot -d`: Runs `kboot` in verbose mode.
+- `sudo kboot -d': Runs `kboot` in verbose mode.
 - `sudo kboot -v`: Displays the version of `kboot`.
 
 # Licensing
