@@ -74,7 +74,7 @@ sudo cp -r $HOME/kboot/etc/kboot.d /etc
 ### Configuration:
 
 `kboot` uses the directory `/etc/kboot.d` files to load kernels.
->_⚠️ Important: The files in this directory must refer to a valid kernel (vmlinuz) and initram images (initrd.img) within the filesystem. Starting with Nitrux 2.9.1, the distribution puts kernel images other than the default kernel, like the signed Debian kernel, and initrd in the directory `/kboot` for better organization. In addition, to prevent polluting the GRUB menu._
+>_⚠️ Important: The files in this directory must refer to a valid kernel (vmlinuz) and initram images (initrd.img) within the filesystem. We recommend putting kernel images other than the default kernel and initrd in the directory /kboot for better organization. In addition, to prevent polluting the GRUB menu._
 
 ### Options:
 
