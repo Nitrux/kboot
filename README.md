@@ -47,7 +47,7 @@ The Kernel Boot (`kboot`) utility uses [kexec](https://en.wikipedia.org/wiki/Kex
 
 ### Support for Previous Releases
 
-`kboot` can work with previous releases that include [kexec](https://en.wikipedia.org/wiki/Kexec), such as Nitrux 2.9.0.
+`kboot` can work with previous releases that include [kexec](https://en.wikipedia.org/wiki/Kexec), such as [Nitrux 2.9.0](https://nxos.org/changelog/release-announcement-nitrux-2-9-0/).
 
 **Using `kboot` on Previous Releases**
 
