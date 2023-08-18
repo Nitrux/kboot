@@ -214,6 +214,7 @@ done
 
 if [ "$(get_gpu_manufacturer)" == "NVIDIA" ]; then
     puts_warning "For users of Nvidia GPUs, using Kernel Boot is not a viable option due to how the Nvidia proprietary driver works with the Linux kernel."
+	puts_warning "Add the necessary parameters to the default entry in the GRUB menu by editing the file /etc/default/grub."
     exit 0
 fi
 
