@@ -1,3 +1,9 @@
+kboot (0.0.6) nitrux; urgency=medium
+
+  * Update kboot to display a warning message about Nvidia.
+
+ -- Uri Herrera <uri_herrera@nxos.org>  Fri, 18 Aug 2023 00:08:00 -0500
+
 kboot (0.0.5) nitrux; urgency=medium
 
   * Update included examples in /etc/kboot.d.
