@@ -1,3 +1,9 @@
+kboot (0.0.8) nitrux; urgency=medium
+
+  * Remove examples from package.
+
+ -- Uri Herrera <uri_herrera@nxos.org>  Tue, 02 Nov 2023 01:45:00 -0500
+
 kboot (0.0.7) nitrux; urgency=medium
 
   * Update warning.
