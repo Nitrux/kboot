@@ -213,8 +213,8 @@ for cmd; do
 done
 
 if [ "$(get_gpu_manufacturer)" == "NVIDIA" ]; then
-    puts_warning "For users of NVIDIA GPUs, using Kernel Boot is not a viable option due to how the NVIDIA proprietary driver works with the Linux kernel."
-	puts_warning "Add the necessary parameters to the default entry in the GRUB menu by editing the file /etc/default/grub."
+    puts_warning "Kernel Boot is not a viable option for users of NVIDIA GPUs due to how the NVIDIA proprietary driver works with the Linux kernel."
+	puts_warning "To use a different kernel, see https://nxos.org/tutorial/how-to-use-kernel-boot/#using-kernels-from-distrobox-containers."
     exit 0
 fi
 
