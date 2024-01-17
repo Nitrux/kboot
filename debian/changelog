@@ -1,6 +1,7 @@
 kboot (0.0.9) nitrux; urgency=medium
 
   * Update warning about NVIDIA.
+  * Update template.
 
  -- Uri Herrera <uri_herrera@nxos.org>  Wed, 17 Jan 2024 15:38:00 -0500
 

@@ -1,0 +1,16 @@
+# Default values for booting a kernel with kboot
+# 2023 (c) Nitrux Latinoamericana S.C.
+
+# Define the path of vmlinuz and initrd to use with kexec.
+# We suggest using the directory /kboot to organize kernels.
+# Regular files and soft links are valid file types to use.
+#
+KEXEC_VMLINUZ=/kboot/example/vmlinuz
+KEXEC_INITRD=/kboot/example/initrd.img
+
+# Define the parameters used when loading the kernel.
+# Kernel parameters go as a single line. Use cat /proc/cmdline to obtain a list of currently used kernel parameters.
+#
+# NOTE: Do not use undeclared variables in the parameters. Doing so will prevent the kernel from loading. This is not a bug.
+#
+KERNEL_PARAMETERS=""
