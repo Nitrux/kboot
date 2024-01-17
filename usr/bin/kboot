@@ -214,7 +214,7 @@ done
 
 if [ "$(get_gpu_manufacturer)" == "NVIDIA" ]; then
     puts_warning "Kernel Boot is not a viable option for users of NVIDIA GPUs due to how the NVIDIA proprietary driver works with the Linux kernel."
-	puts_warning "To use a different kernel, see https://nxos.org/tutorial/how-to-use-kernel-boot/#using-kernels-from-distrobox-containers."
+	puts_warning "To use a different kernel, see https://nxos.org/tutorial/how-to-use-kernel-boot/#using-kernels-from-distrobox-containers. Bye."
     exit 0
 fi
 
