@@ -139,10 +139,36 @@ root_kexec() {
 	"${ROOT[@]}"
 }
 
+get_nvidia_driver_module() {
+    local gpu_module
+    gpu_module=$(lshw -c DISPLAY | grep -i "driver=" | awk -F 'driver=' '{print $2}' | awk '/nvidia/{print $1; exit}')
+    echo "$gpu_module"
+}
+
 get_gpu_manufacturer() {
     nvidia-smi -L | awk -F ' ' '$3=="NVIDIA"{print $3; exit}'
 }
 
+GPU_MANUFACTURER=$(get_gpu_manufacturer)
+
+disable_nvidia_drm() {
+    nvidia-settings --assign CurrentMetaMode="nvidia-auto-select +0+0 {ForceCompositionPipeline=On}"
+}
+
+enable_nvidia_drm() {
+    nvidia-settings --assign CurrentMetaMode="nvidia-auto-select +0+0 {ForceCompositionPipeline=Off}"
+}
+
+unload_dependent_modules() {
+    for module in "$@"; do
+        if lsmod | grep -q "$module"; then
+            puts_info "Unloading module: $module"
+            rmmod "$module"
+        else
+            puts_info "Module $module is not currently loaded."
+        fi
+    done
+}
 
 # -- Use a log file.
 # -- Everything below will go to the file kboot.log.
@@ -212,47 +238,111 @@ for cmd; do
 	esac
 done
 
-if [ "$(get_gpu_manufacturer)" == "NVIDIA" ]; then
-    puts_warning "Kernel Boot is not a viable option for users of NVIDIA GPUs due to how the NVIDIA proprietary driver works with the Linux kernel."
-	puts_warning "To use a different kernel, see https://nxos.org/tutorial/how-to-use-kernel-boot/#using-kernels-from-distrobox-containers. Bye."
-    exit 0
+# -- Check if the computer is using NVIDIA hardware.
+
+if [ "$GPU_MANUFACTURER" == "NVIDIA" ]; then
+    NVIDIA_MODULE=$(get_nvidia_driver_module)
+
+    if [ -n "$NVIDIA_MODULE" ]; then
+        puts_info "Detected NVIDIA proprietary driver..."
+
+        # -- Disable NVIDIA DRM mode before unloading dependent modules.
+
+        disable_nvidia_drm
+        
+        # -- Unload dependent modules before unloading NVIDIA module.
+
+        unload_dependent_modules "nvidia_modeset" "nvidia_drm" "$NVIDIA_MODULE"
+
+        # -- Execute kexec.
+
+        ( for cmd; do
+            case "${1,,}" in
+            '' )  error "No operation specified (use -h to see a list of operations).";;
+
+            switch)
+                if [ -z "$2" ]; then
+                    puts_error "Missing file argument!, quitting."
+                    exit 1
+                fi
+
+                # -- File path within /etc/kboot.d directory.
+
+                FILE_NAME="$2"
+                FILE_PATH="/etc/kboot.d/$FILE_NAME"
+
+                if [ ! -f "$FILE_PATH" ]; then
+                    puts_error "File not found in /etc/kboot.d directory!, quitting."
+                    exit 1
+                fi
+
+                # -- Read values from the specified file.
+                # shellcheck source=/dev/null
+
+                . "$FILE_PATH"
+
+                # -- Call the root_kexec function with the values from the file.
+
+                root_kexec -l "$KEXEC_VMLINUZ" --initrd="$KEXEC_INITRD" --append="$KERNEL_PARAMETERS" 
+                root_kexec -e
+                ;;
+            *)
+                puts_error "Invalid flag!. Use 'kboot switch <file_name>' to load a new kernel image, quitting."
+                exit 1
+                ;;
+            esac
+        done ) 2>&1 | tee -a "$KBOOT_LOG"
+
+        # -- Reload NVIDIA driver module if it was unloaded.
+
+        modprobe "$NVIDIA_MODULE"
+
+        # -- Reload dependent modules.
+
+        enable_nvidia_drm
+    else
+        puts_info "No NVIDIA proprietary driver module detected."
+    fi
+else
+
+    # -- Execute kexec without unloading/reloading for non-NVIDIA GPUs.
+
+    ( for cmd; do
+        case "${1,,}" in
+        '' )  error "No operation specified (use -h to see a list of operations).";;
+
+        switch)
+            if [ -z "$2" ]; then
+                puts_error "Missing file argument!, quitting."
+                exit 1
+            fi
+
+            # -- File path within /etc/kboot.d directory.
+
+            FILE_NAME="$2"
+            FILE_PATH="/etc/kboot.d/$FILE_NAME"
+
+            if [ ! -f "$FILE_PATH" ]; then
+                puts_error "File not found in /etc/kboot.d directory!, quitting."
+                exit 1
+            fi
+
+            # -- Read values from the specified file.
+            # shellcheck source=/dev/null
+
+            . "$FILE_PATH"
+
+            # -- Call the root_kexec function with the values from the file.
+
+            root_kexec -l "$KEXEC_VMLINUZ" --initrd="$KEXEC_INITRD" --append="$KERNEL_PARAMETERS" 
+            root_kexec -e
+            ;;
+        *)
+            puts_error "Invalid flag!. Use 'kboot switch <file_name>' to load a new kernel image, quitting."
+            exit 1
+            ;;
+        esac
+    done ) 2>&1 | tee -a "$KBOOT_LOG"
 fi
-
-( for cmd; do
-    case "${1,,}" in
-    '' )  error "No operation specified (use -h to see a list of operations).";;
-
-    switch)
-        if [ -z "$2" ]; then
-            puts_error "Missing file argument!, quitting."
-            exit 1
-        fi
-
-        # -- File path within /etc/kboot.d directory.
-
-        FILE_NAME="$2"
-        FILE_PATH="/etc/kboot.d/$FILE_NAME"
-
-        if [ ! -f "$FILE_PATH" ]; then
-            puts_error "File not found in /etc/kboot.d directory!, quitting."
-            exit 1
-        fi
-
-        # -- Read values from the specified file.
-        # shellcheck source=/dev/null
-
-        . "$FILE_PATH"
-
-        # -- Call the root_kexec function with the values from the file.
-
-        root_kexec -l "$KEXEC_VMLINUZ" --initrd="$KEXEC_INITRD" --append="$KERNEL_PARAMETERS" 
-        root_kexec -e
-        ;;
-    *)
-        puts_error "Invalid flag!. Use 'kboot switch <file_name>' to load a new kernel image, quitting."
-        exit 1
-        ;;
-    esac
-done ) 2>&1 | tee -a "$KBOOT_LOG"
 
 #   ====== END ======
