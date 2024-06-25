@@ -16,9 +16,9 @@ The Kernel Boot (`kboot`) utility uses [kexec](https://en.wikipedia.org/wiki/Kex
 Kernel Boot is designed for a particular purpose, making it easier to transition from the currently running kernel to a new kernel and avoiding the time-consuming hardware initialization and bootloader stages. It performs the following steps:
 
 1. Reads the settings in the specified configuration file.
-2. Then, uses `kexec` to load the selected kernel using the parameters from the configuration file.
+2. Then, use `kexec` to load the selected kernel using the parameters from the configuration file.
 
-> _♦ Information: Kernel Boot` is included by default starting with Nitrux 2.9.1._
+> _♦ Information: Kernel Boot is included by default starting with Nitrux 2.9.1._
 
 ---
 
@@ -35,7 +35,7 @@ Kernel Boot is designed for a particular purpose, making it easier to transition
 - An init or service manager.
   - Kernel Boot does not function as an init or replace an init. The init process is responsible for initializing the system, starting essential system services and daemons, and bringing up the user space environment. Kernel Boot does not perform these functions, Kernel Boot only loads a new kernel image.
 - An initrd or initram generator.
-  - Kernel Boot does not replace or modify the existing initramfs generator. The initram generators tools like dracut or initramfs-tools are responsible for identifying and including the necessary modules, drivers, and scripts to correctly set up the root filesystem and handle any unique configurations (e.g., encrypted root, LVM, RAID, etc.). Kernel Boot loads a kernel and an existing initram image and transfers control to it.
+  - Kernel Boot does not replace or modify the existing initramfs generator. The initram generator tools like dracut or initramfs-tools are responsible for identifying and including the necessary modules, drivers, and scripts to correctly set up the root filesystem and handle any unique configurations (e.g., encrypted root, LVM, RAID, etc.). Kernel Boot loads a kernel and an existing initram image and transfers control to it.
 - A container, virtual machine, Live USB creator, Linux distribution, Live/Recovery/Rescue/Emergency environment, system installer, desktop environment, firmware, or "proprietary software."
   - _**Note**: We don't know why anyone would think that, but one can never know, so let's clarify that._
 
