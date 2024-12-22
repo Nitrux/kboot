@@ -18,7 +18,7 @@ Kernel Boot is designed for a particular purpose, making it easier to transition
 1. Reads the settings in the specified configuration file.
 2. Then, use `kexec` to load the selected kernel using the parameters from the configuration file.
 
-> _♦ Information: Kernel Boot is included by default starting with Nitrux 2.9.1._
+> _♦ Information: Kernel Boot is included by default, starting with Nitrux 2.9.1._
 
 ---
 
@@ -31,9 +31,9 @@ Kernel Boot is designed for a particular purpose, making it easier to transition
 ### What `kboot` is not
 
 - A bootloader.
-  - Kernel Boot` uses a mechanism for loading and executing a new kernel within an already running system, bypassing the complete boot process. In comparison, a bootloader such as GRUB is a full-featured bootloader responsible for the initial bootstrapping of the operating system. GRUB provides a menu to select the desired operating system or kernel.
+  - Kernel Boot uses a mechanism for loading and executing a new kernel within an already running system, bypassing the complete boot process. In comparison, a bootloader such as GRUB is a full-featured bootloader responsible for the initial bootstrapping of the operating system. GRUB provides a menu to select the desired operating system or kernel.
 - An init or service manager.
-  - Kernel Boot does not function as an init or replace an init. The init process is responsible for initializing the system, starting essential system services and daemons, and bringing up the user space environment. Kernel Boot does not perform these functions, Kernel Boot only loads a new kernel image.
+  Kernel Boot does not function as an init or replace an init. The init process is responsible for initializing the system, starting essential system services and daemons, and bringing up the user-space environment. Kernel Boot does not perform these functions; It only loads a new kernel image.
 - An initrd or initram generator.
   - Kernel Boot does not replace or modify the existing initramfs generator. The initram generator tools like dracut or initramfs-tools are responsible for identifying and including the necessary modules, drivers, and scripts to correctly set up the root filesystem and handle any unique configurations (e.g., encrypted root, LVM, RAID, etc.). Kernel Boot loads a kernel and an existing initram image and transfers control to it.
 - A container, virtual machine, Live USB creator, Linux distribution, Live/Recovery/Rescue/Emergency environment, system installer, desktop environment, firmware, or "proprietary software."
@@ -51,7 +51,7 @@ Kernel Boot can work with previous releases that include [kexec](https://en.wiki
 
 **Using `kboot` on Previous Releases**
 
-For releases of Nitrux where `kboot` is not available by default, do the following.
+For Nitrux releases where `kboot` is not available by default, do the following:
 
 ```
 git clone --depth=1 https://github.com/Nitrux/kboot.git $HOME/kboot
