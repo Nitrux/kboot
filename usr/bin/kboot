@@ -33,7 +33,7 @@ set -eu
 
 TOOL_NAME="Kernel Boot"
 TOOL_SHRT_NAME="kboot"
-TOOL_VERSION="0.0.9" 
+TOOL_VERSION="1.0.0" 
 VENDOR='Nitrux Latinoamericana S.C.'
 FECHA=$(date +%Y)
 
@@ -276,7 +276,9 @@ fi
         puts_info "Loading kernel: $KEXEC_VMLINUZ"
         puts_info "With initrd: $KEXEC_INITRD"
         
-        root_kexec -l "$KEXEC_VMLINUZ" --initrd="$KEXEC_INITRD" --append="$KERNEL_PARAMETERS" 
+        root_kexec -l "$KEXEC_VMLINUZ" --initrd="$KEXEC_INITRD" --append="$KERNEL_PARAMETERS" || exit 1
+        
+        puts_success "Kernel loaded successfully. Switching now..."
         root_kexec -e
         ;;
     *)

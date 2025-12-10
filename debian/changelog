@@ -1,6 +1,7 @@
 kboot (1.0.0) nitrux; urgency=medium
 
   * Make kboot more robust, safer, and validate variables.
+  * Adds error checking to ensure kexec stops immediately if the kernel fails to load.
 
  -- Uri Herrera <uri_herrera@nxos.org>  Wed, 10 Dec 2025 07:48:00 -0500
 
