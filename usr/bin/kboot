@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 #############################################################################################################################################################################
 #   The license used for this file and its contents is: BSD-3-Clause                                                                                                        #
@@ -33,7 +33,7 @@ set -eu
 
 TOOL_NAME="Kernel Boot"
 TOOL_SHRT_NAME="kboot"
-TOOL_VERSION="$(md5sum /usr/bin/kboot | cut -c -32)"
+TOOL_VERSION="0.0.9" 
 VENDOR='Nitrux Latinoamericana S.C.'
 FECHA=$(date +%Y)
 
@@ -41,36 +41,36 @@ FECHA=$(date +%Y)
 # -- Print informative messages to stderr.
 
 puts_info() {
-	if [ -n "$1" ]; then
-		printf "%s: \e[34mInfo:\e[0m %s\n" "$TOOL_NAME" "$*" >&2
-	fi
+    if [ -n "$1" ]; then
+        printf "%s: \e[34mInfo:\e[0m %s\n" "$TOOL_NAME" "$*" >&2
+    fi
 }
 
 
 # -- Print success messages to stderr.
 
 puts_success() {
-	if [ -n "$1" ]; then
-		printf "%s: \e[32mSuccess:\e[0m %s\n" "$TOOL_NAME" "$*" >&2
-	fi
+    if [ -n "$1" ]; then
+        printf "%s: \e[32mSuccess:\e[0m %s\n" "$TOOL_NAME" "$*" >&2
+    fi
 }
 
 
 # -- Print error messages to stderr.
 
 puts_error() {
-	if [ -n "$1" ]; then
-		printf "%s: \e[31mError:\e[0m %b\n" "$TOOL_NAME" "$*" >&2
-	fi
+    if [ -n "$1" ]; then
+        printf "%s: \e[31mError:\e[0m %b\n" "$TOOL_NAME" "$*" >&2
+    fi
 }
 
 
 # -- Print messages or text using multiple lines to stderr.
 
 print_message() {
-	if [ -n "$1" ]; then
-		printf "%s\n" "$@" >&2
-	fi
+    if [ -n "$1" ]; then
+        printf "%s\n" "$@" >&2
+    fi
 }
 
 
@@ -84,22 +84,21 @@ puts_warning() {
 
 
 # -- Check if this is running as root.
-# -- Exit if not running as root.
 
 if [ "$(id -u)" -ne 0 ]; then
-	puts_error "$TOOL_NAME is not running as root, quitting."
-	exit 1
+    puts_error "$TOOL_NAME is not running as root, quitting."
+    exit 1
 else
-	puts_success "$TOOL_NAME is running as root, continuing..."
-	ROOT="sudo"
+    puts_success "$TOOL_NAME is running as root, continuing..."
+    ROOT="sudo"
 fi
 
 
 # -- Check if any arguments are passed.
 
-if [ $# -eq 0 ]; then
-	puts_error "No arguments provided to $TOOL_NAME, quitting."
-	exit 1
+if [ "$#" -eq 0 ]; then
+    puts_error "No arguments provided to $TOOL_NAME. Use -h for help."
+    exit 1
 fi
 
 
@@ -119,132 +118,164 @@ CONFIG_DIR="/etc/kboot.d"
 # -- Check existence of kboot kernel files directory.
 
 if [ -d "$CONFIG_DIR" ]; then
-	puts_success "Kernel Boot directory found, continuing..."
+    puts_success "Kernel Boot directory found, continuing..."
 else
-	puts_error "Kernel Boot directory not found!, quitting."
-	exit 1
+    puts_error "Kernel Boot directory '$CONFIG_DIR' not found!, quitting."
+    exit 1
 fi
 
 
 # -- Functions.
 
 root_kexec() {
-	local ROOT=("sudo" "kexec" "$@")
+    local ROOT=("sudo" "kexec" "$@")
 
-	if ! command -v "${ROOT[0]}" >/dev/null 2>&1; then
-		puts_error "Error: '${ROOT[0]}' command not found. Please make sure it's installed and try again."
-		return 1
-	fi
+    if ! command -v "${ROOT[0]}" >/dev/null 2>&1; then
+        puts_error "Error: '${ROOT[0]}' command not found. Please make sure it's installed and try again."
+        return 1
+    fi
 
-	"${ROOT[@]}"
+    "${ROOT[@]}"
 }
 
 get_gpu_manufacturer() {
-    nvidia-smi -L | awk -F ' ' '$3=="NVIDIA"{print $3; exit}'
+    nvidia-smi -L 2>/dev/null | awk -F ' ' '$3=="NVIDIA"{print $3; exit}' || true
+}
+
+load_config() {
+    local config_file="$1"
+    
+    KEXEC_VMLINUZ=""
+    KEXEC_INITRD=""
+    KERNEL_PARAMETERS=""
+
+    while IFS='=' read -r key value || [ -n "$key" ]; do
+        key=$(echo "$key" | xargs)
+        value=$(echo "$value" | xargs)
+
+        [[ "$key" =~ ^#.*$ ]] && continue
+        [[ -z "$key" ]] && continue
+
+        value="${value%\"}"
+        value="${value#\"}"
+        value="${value%\'}"
+        value="${value#\'}"
+
+        case "$key" in
+            KEXEC_VMLINUZ)      KEXEC_VMLINUZ="$value" ;;
+            KEXEC_INITRD)       KEXEC_INITRD="$value" ;;
+            KERNEL_PARAMETERS)  KERNEL_PARAMETERS="$value" ;;
+        esac
+    done < "$config_file"
 }
 
 
 # -- Use a log file.
-# -- Everything below will go to the file kboot.log.
 
 KBOOT_LOG="/var/log/kboot.log"
 
 if [ -f "$KBOOT_LOG" ]; then
-	puts_info "$TOOL_NAME log file found, skipping..."
+    puts_info "$TOOL_NAME log file found, skipping..."
 else
-	puts_info "Unable to locate $TOOL_NAME log file. Creating a new log file, continuing..."
+    puts_info "Unable to locate $TOOL_NAME log file. Creating a new log file, continuing..."
+    touch "$KBOOT_LOG"
+    chmod 600 "$KBOOT_LOG"
 fi
 
 #   ====== START ======
 
 # -- Flag parsing.
-
 for cmd; do
-	case "$cmd" in
-		-h | --help)
-			print_message "$TOOL_NAME" \
-				"" \
-				"Description:" \
-				"" \
-				"	$TOOL_NAME or $TOOL_SHRT_NAME is a utility designed for the Nitrux Operating System to provide a solution to make it easier to boot other Linux kernels." \
-				"	⚠️ Important: $TOOL_SHRT_NAME is intended to work exclusively in Nitrux OS, and using this utility in other distributions is not supported at all." \
-				"" \
-				"	Report bugs at: https://github.com/Nitrux/kboot/issues." \
-				"" \
-				"Flags:" \
-				"	-h or --help		Show this help." \
-				"	-v or --version		Show the version." \
-				"	-d or --debug		Enable verbose output." \
-				"" \
-				"Operations:" \
-				"	switch	   Switches the kernel using the settings in the specified configuration file, e.g debian or liquorix." \
-				"" \
-				"Usage:" \
-				"	sudo kboot <flag> (operation)" \
-				"" \
-				"Examples:" \
-				"	sudo kboot switch debian" \
-				"	sudo kboot -d switch liquorix"
+    case "$cmd" in
+        -h | --help)
+            print_message "$TOOL_NAME" \
+                "" \
+                "Description:" \
+                "" \
+                "    $TOOL_NAME or $TOOL_SHRT_NAME is a utility designed for the Nitrux Operating System to provide a solution to make it easier to boot other Linux kernels." \
+                "    ⚠️ Important: $TOOL_SHRT_NAME is intended to work exclusively in Nitrux OS, and using this utility in other distributions is not supported at all." \
+                "" \
+                "    Report bugs at: https://github.com/Nitrux/kboot/issues." \
+                "" \
+                "Flags:" \
+                "    -h or --help        Show this help." \
+                "    -v or --version     Show the version." \
+                "    -d or --debug       Enable verbose output." \
+                "" \
+                "Operations:" \
+                "    switch              Switches the kernel using the settings in the specified configuration file, e.g debian or liquorix." \
+                "" \
+                "Usage:" \
+                "    sudo kboot <flag> (operation)" \
+                "" \
+                "Examples:" \
+                "    sudo kboot switch debian" \
+                "    sudo kboot -d switch liquorix"
 
-			exit
-			;;
+            exit
+            ;;
 
-		-v | --version)
-			print_message "$TOOL_NAME" \
-				"" \
-				"Version: $TOOL_VERSION." \
-				"" \
-				"The license used for this file and its contents is: BSD-3-Clause." \
-				"" \
-				"Authors:" \
-				"" \
-				"	Copyright <2023> <Uri Herrera <uri_herrera@nxos.org>>" \
-				"" \
-				"(c) $FECHA Some Rights Reserved. Made by $VENDOR"
+        -v | --version)
+            print_message "$TOOL_NAME" \
+                "" \
+                "Version: $TOOL_VERSION." \
+                "" \
+                "The license used for this file and its contents is: BSD-3-Clause." \
+                "" \
+                "Authors:" \
+                "" \
+                "    Copyright <2023> <Uri Herrera <uri_herrera@nxos.org>>" \
+                "" \
+                "(c) $FECHA Some Rights Reserved. Made by $VENDOR"
 
-			exit
-			;;
+            exit
+            ;;
 
-		-d | --debug)
-			set -x
-			shift
-			;;
-	esac
+        -d | --debug)
+            set -x
+            shift
+            ;;
+    esac
 done
 
 if [ "$(get_gpu_manufacturer)" == "NVIDIA" ]; then
     puts_warning "Kernel Boot is not a viable option for users of NVIDIA GPUs due to how the NVIDIA proprietary driver works with the Linux kernel."
-	puts_warning "To use a different kernel, see https://nxos.org/tutorial/how-to-use-kernel-boot/#using-kernels-from-distrobox-containers. Bye."
+    puts_warning "To use a different kernel, see https://nxos.org/tutorial/how-to-use-kernel-boot/#using-kernels-from-distrobox-containers. Bye."
     exit 0
 fi
 
 ( for cmd; do
     case "${1,,}" in
     '' )  error "No operation specified (use -h to see a list of operations).";;
-
     switch)
-        if [ -z "$2" ]; then
-            puts_error "Missing file argument!, quitting."
+        if [ -z "${2:-}" ]; then
+            puts_error "Missing configuration file argument for 'switch' operation."
             exit 1
         fi
-
-        # -- File path within /etc/kboot.d directory.
 
         FILE_NAME="$2"
-        FILE_PATH="/etc/kboot.d/$FILE_NAME"
+        FILE_PATH="$CONFIG_DIR/$FILE_NAME"
 
         if [ ! -f "$FILE_PATH" ]; then
-            puts_error "File not found in /etc/kboot.d directory!, quitting."
+            puts_error "Configuration file '$FILE_NAME' not found in '$CONFIG_DIR' directory!, quitting."
             exit 1
         fi
 
-        # -- Read values from the specified file.
-        # shellcheck source=/dev/null
+        load_config "$FILE_PATH"
 
-        . "$FILE_PATH"
+        if [ -z "${KEXEC_VMLINUZ:-}" ]; then
+            puts_error "Invalid config: KEXEC_VMLINUZ is missing in '$FILE_NAME'."
+            exit 1
+        fi
 
-        # -- Call the root_kexec function with the values from the file.
+        if [ -z "${KEXEC_INITRD:-}" ]; then
+            puts_error "Invalid config: KEXEC_INITRD is missing in '$FILE_NAME'."
+            exit 1
+        fi
 
+        puts_info "Loading kernel: $KEXEC_VMLINUZ"
+        puts_info "With initrd: $KEXEC_INITRD"
+        
         root_kexec -l "$KEXEC_VMLINUZ" --initrd="$KEXEC_INITRD" --append="$KERNEL_PARAMETERS" 
         root_kexec -e
         ;;

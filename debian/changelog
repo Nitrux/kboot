@@ -1,3 +1,9 @@
+kboot (1.0.0) nitrux; urgency=medium
+
+  * Make kboot more robust, safer, and validate variables.
+
+ -- Uri Herrera <uri_herrera@nxos.org>  Wed, 10 Dec 2025 07:48:00 -0500
+
 kboot (0.0.9) nitrux; urgency=medium
 
   * Update warning about NVIDIA.
