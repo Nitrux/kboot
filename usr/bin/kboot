@@ -192,7 +192,7 @@ for cmd; do
                 "" \
                 "Description:" \
                 "" \
-                "    $TOOL_NAME or $TOOL_SHRT_NAME is a utility designed for the Nitrux Operating System to provide a solution to make it easier to boot other Linux kernels." \
+                "    $TOOL_NAME or $TOOL_SHRT_NAME is a utility for Nitrux OS that makes it easier to boot additional Linux kernels." \
                 "    ⚠️ Important: $TOOL_SHRT_NAME is intended to work exclusively in Nitrux OS, and using this utility in other distributions is not supported at all." \
                 "" \
                 "    Report bugs at: https://github.com/Nitrux/kboot/issues." \
