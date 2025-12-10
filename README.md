@@ -10,7 +10,7 @@
 The Kernel Boot (`kboot`) utility uses [kexec](https://en.wikipedia.org/wiki/Kexec), and we designed it for [Nitrux OS](https://nxos.org/) to make it easier to load other Linux kernels on the fly.
 
 > [!WARNING]
-> `kboot` is intended to work exclusively in Nitrux OS, and using this utility in other distributions is not supported. Please do not open issues regarding this use case; they will be closed._
+> `kboot` is intended to work exclusively in Nitrux OS, and using this utility in other distributions is not supported. Please do not open issues regarding this use case; they will be closed.
 
 # Overview
 
@@ -20,7 +20,7 @@ Kernel Boot is designed for a particular purpose, making it easier to transition
 2. Then, use `kexec` to load the selected kernel using the parameters from the configuration file.
 
 > [!TIP]
-> Kernel Boot is included by default, starting with Nitrux 2.9.1._
+> Kernel Boot is included by default, starting with Nitrux 2.9.1.
 
 ---
 
@@ -41,7 +41,7 @@ Kernel Boot is designed for a particular purpose, making it easier to transition
 - A container, virtual machine, Live USB creator, Linux distribution, Live/Recovery/Rescue/Emergency environment, system installer, desktop environment, firmware, or "proprietary software."
 
 > [!NOTE]
-> We don't know why anyone would think that, but one can never know, so let's clarify that._
+> We don't know why anyone would think that, but one can never know, so let's clarify that.
 
 ----
 
@@ -74,14 +74,14 @@ Kernel Boot is designed to be highly autonomous.
 - Switches the kernel using the settings in the specified configuration file, e.g., `/etc/kboot.d/debian` or `/etc/kboot.d/liquorix`.
 
 > [!WARNING]
-> This process involves stopping the currently running kernel and starting the new kernel from scratch. All running processes, including the graphical session, are terminated during this transition. For users of NVIDIA GPUs, using Kernel Boot is not a viable option due to how the NVIDIA proprietary driver works with the Linux kernel._
+> This process involves stopping the currently running kernel and starting the new kernel from scratch. All running processes, including the graphical session, are terminated during this transition. For users of NVIDIA GPUs, using Kernel Boot is not a viable option due to how the NVIDIA proprietary driver works with the Linux kernel.
 
 ### Configuration:
 
 Kernel Boot uses the directory `/etc/kboot.d` files to load kernels.
 
 > [!WARNING]
-> The files in this directory must refer to a valid kernel (vmlinuz) and initram images (initrd.img) within the filesystem. We recommend placing kernel images other than the default kernel and initrd in the/kboot directory for better organization. In addition, to prevent polluting the GRUB menu._
+> The files in this directory must refer to a valid kernel (vmlinuz) and initram images (initrd.img) within the filesystem. We recommend placing kernel images other than the default kernel and initrd in the/kboot directory for better organization. In addition, to prevent polluting the GRUB menu.
 
 ### Options:
 
