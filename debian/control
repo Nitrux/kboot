@@ -2,7 +2,7 @@ Source: kboot
 Section: misc
 Priority: optional
 Maintainer: Uri Herrera <uri_herrera@nxos.org>
-Build-Depends: debhelper (>=13)
+Build-Depends: debhelper-compat (= 13)
 Standards-Version: 4.6.2
 Homepage: https://nxos.org
 
