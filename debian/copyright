@@ -8,7 +8,7 @@ License: BSD-3
 
 Files: debian/*
 Copyright: 2023 Uri Herrera <uri_herrera@nxos.org>
-License: GPL-3.0+
+License: BSD-3-Clause
 
 License: BSD-3
  This program is free software: you can redistribute it and/or modify
