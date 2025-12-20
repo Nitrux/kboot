@@ -1,3 +1,9 @@
+kboot (1.0.1) nitrux; urgency=medium
+
+  * Improve messages function.
+
+ -- Uri Herrera <uri_herrera@nxos.org>  Sat, 20 Dec 2025 12:7:00 -0500
+
 kboot (1.0.0) nitrux; urgency=medium
 
   * Make kboot more robust, safer, and validate variables.

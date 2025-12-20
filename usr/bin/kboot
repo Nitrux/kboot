@@ -21,45 +21,39 @@ FECHA=$(date +%Y)
 
 # -- Print messages to stderr.
 
-puts_info() {
-    if [ -n "$1" ]; then
-        printf "%s: \e[34mInfo:\e[0m %s\n" "$TOOL_NAME" "$*" >&2
+_puts() {
+    [ -n "${1-}" ] || return 0
+
+    level=$1
+    shift || true
+
+    [ $# -gt 0 ] || return 0
+
+    case "$level" in
+        info)    color='34'; label='Info' ;;
+        success) color='32'; label='Success' ;;
+        warning) color='33'; label='Warning' ;;
+        error)   color='31'; label='Error' ;;
+        *)       color='0';  label="$level" ;;
+    esac
+
+    if [ "$level" = "error" ]; then
+        printf '%s: \033[%sm%s:\033[0m %b\n' "${TOOL_NAME-}" "$color" "$label" "$*" >&2
+    else
+        printf '%s: \033[%sm%s:\033[0m %s\n' "${TOOL_NAME-}" "$color" "$label" "$*" >&2
     fi
 }
 
-
-# -- Print success messages to stderr.
-
-puts_success() {
-    if [ -n "$1" ]; then
-        printf "%s: \e[32mSuccess:\e[0m %s\n" "$TOOL_NAME" "$*" >&2
-    fi
-}
-
-
-# -- Print error messages to stderr.
-
-puts_error() {
-    if [ -n "$1" ]; then
-        printf "%s: \e[31mError:\e[0m %b\n" "$TOOL_NAME" "$*" >&2
-    fi
-}
-
-
-# -- Print messages or text using multiple lines to stderr.
+puts_info()    { _puts info "$@"; }
+puts_success() { _puts success "$@"; }
+puts_warning() { _puts warning "$@"; }
+puts_error()   { _puts error "$@"; }
 
 print_message() {
-    if [ -n "$1" ]; then
-        printf "%s\n" "$@" >&2
-    fi
-}
-
-
-# -- Print warning messages to stderr.
-
-puts_warning() {
-    if [ -n "$1" ]; then
-        printf "%s: \e[33mWarning:\e[0m %s\n" "$TOOL_NAME" "$*" >&2
+    if [ $# -eq 0 ]; then
+        printf '\n' >&2
+    else
+        printf '%s\n' "$@" >&2
     fi
 }
 
