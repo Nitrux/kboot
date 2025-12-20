@@ -19,7 +19,7 @@ VENDOR='Nitrux Latinoamericana S.C.'
 FECHA=$(date +%Y)
 
 
-# -- Print informative messages to stderr.
+# -- Print messages to stderr.
 
 puts_info() {
     if [ -n "$1" ]; then
