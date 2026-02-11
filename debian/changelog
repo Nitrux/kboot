@@ -1,8 +1,14 @@
+kboot (1.0.1-1) nitrux; urgency=medium
+
+  * Build for all architectures.
+
+ -- Uri Herrera <uri_herrera@nxos.org>  Wed, 11 Feb 2026 17:58:00 -0500
+
 kboot (1.0.1) nitrux; urgency=medium
 
   * Improve messages function.
 
- -- Uri Herrera <uri_herrera@nxos.org>  Sat, 20 Dec 2025 12:7:00 -0500
+ -- Uri Herrera <uri_herrera@nxos.org>  Sat, 20 Dec 2025 12:27:00 -0500
 
 kboot (1.0.0) nitrux; urgency=medium
 
