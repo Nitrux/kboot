@@ -33,7 +33,7 @@ Kernel Boot is designed for a particular purpose, making it easier to transition
 ### What `kboot` is not
 
 - A bootloader.
-  - Kernel Boot uses a mechanism for loading and executing a new kernel within an already running system, bypassing the complete boot process. In comparison, a bootloader such as GRUB is a full-featured bootloader responsible for the initial bootstrapping of the operating system. GRUB provides a menu to select the desired operating system or kernel.
+  - Kernel Boot uses a mechanism for loading and executing a new kernel within an already running system, bypassing the complete boot process. In comparison, a bootloader such as GRUB is a full-featured bootloader responsible for the initial bootstrapping of the system. GRUB provides a menu to select the desired system or kernel.
 - An init or service manager.
  Kernel Boot does not function as an init or replace an init. The init process is responsible for initializing the system, starting essential system services and daemons, and bringing up the user-space environment. Kernel Boot does not perform these functions; It only loads a new kernel image.
 - An initrd or initram generator.
