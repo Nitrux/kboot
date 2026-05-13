@@ -91,6 +91,7 @@ Kernel Boot uses the directory `/etc/kboot.d` files to load kernels.
 -d or --debug       Enable verbose output.
 
 ```
+
 # Licensing
 
 The repository and its contents are licensed under **BSD-3-Clause**.
