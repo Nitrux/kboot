@@ -1,3 +1,9 @@
+kboot (1.0.1-2) nitrux; urgency=medium
+
+  * Rebuild.
+
+ -- Uri Herrera <uri_herrera@nxos.org>  Sat, 22 Aug 2026 09:19:00 -0500
+
 kboot (1.0.1-1) nitrux; urgency=medium
 
   * Build for all architectures.
